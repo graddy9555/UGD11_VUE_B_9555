@@ -50,7 +50,7 @@
     clipped-left
     height="70px"
     color="grey darken-3"> 
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar￾nav-icon> 
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> 
     
 
 
@@ -75,6 +75,7 @@ data () {
 return {
 drawer: null,
 items: [ { title: 'User Controller', icon: 'mdi-human-male' },
+         { title: 'Vehicle Controller', icon: 'mdi-bike'}
 ],
 }
 },
