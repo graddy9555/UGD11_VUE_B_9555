@@ -16,7 +16,7 @@
                     </v-flex>
                 </v-layout>
 
-                <v-data-table :headers="headers" :items="users" :search="keyword" :loading="load"> <template
+                <v-data-table :headers="headers" :items="vehicles" :search="keyword" :loading="load"> <template
                         v-slot:body="{ items }">
                         <tbody>
                             <tr v-for="(item,index) in items" :key="item.id">
@@ -45,13 +45,17 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <v-text-field label="Name*" v-model="form.name" required></v-text-field>
+                                <v-text-field label="Merk*" v-model="form.merk" required></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field label="Email*" v-model="form.email" required></v-text-field>
+                                <v-text-field label="Tipe*" v-model="form.type" required></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field label="Password*" v-model="form.password" type="password" required>
+                                <v-text-field label="Plat Nomor*" v-model="form.licensePlate" required>
+                                </v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field label="Tanggal dan Waktu*" v-model="form.created_at" required>
                                 </v-text-field>
                             </v-col>
                         </v-row>
@@ -81,30 +85,34 @@ export default {
                     text: 'No',
                     value: 'no',
                 },
-                {   text: 'Name', 
-                    value: 'name' 
+                {   text: 'Merk', 
+                    value: 'merk' 
                 },
-                {   text: 'Email', 
-                    value: 'email' 
+                {   text: 'Tipe', 
+                    value: 'Type' 
                 },
-                {   text: 'Password', 
-                    value: 'password' 
+                {   text: 'Plat Nomor', 
+                    value: 'licensePlate' 
+                },
+                {   text: 'Tanggal dan Waktu', 
+                    value: 'created_at' 
                 },
                 {   text: 'Aksi', 
                     value: null 
                 },
             ],
-            users: [], 
+            vehicles: [], 
             snackbar: false, 
             color: null, 
             text: '', 
             load: false,
             form: { 
-                name : '', 
-                email : '', 
-                password : '' 
+                merk : '', 
+                type : '', 
+                licensePlate : '',
+                created_at : '' 
             },
-            user : new FormData, 
+            vehicle : new FormData, 
             typeInput: 'new', 
             errors : '', 
             updatedId : '',
@@ -113,19 +121,20 @@ export default {
 
     methods: {
         getData(){ 
-            var uri = this.$apiUrl + '/user' 
+            var uri = this.$apiUrl + '/vehicle' 
             this.$http.get(uri).then(response =>{ 
-                this.users=response.data.message 
+                this.vehicles=response.data.message 
             }) 
         },
         
         sendData() {
-            this.user.append('name', this.form.name);
-            this.user.append('email', this.form.email);
-            this.user.append('password', this.form.password);
-            var uri = this.$apiUrl + '/user'
+            this.vehicle.append('merk', this.form.merk);
+            this.vehicle.append('type', this.form.type);
+            this.vehicle.append('licensePlate', this.form.licensePlate);
+            this.vehicle.append('created_at', this.form.created_at);
+            var uri = this.$apiUrl + '/vehicle'
             this.load = true 
-            this.$http.post(uri, this.user).then(response => {
+            this.$http.post(uri, this.vehicle).then(response => {
                 this.snackbar = true; //mengaktifkan snackbar 
                 this.color = 'green'; //memberi warna snackbar 
                 this.text = response.data.message; //memasukkan pesan ke snackbar 
@@ -144,12 +153,13 @@ export default {
         },
 
         updateData(){ 
-            this.user.append('name', this.form.name); 
-            this.user.append('email', this.form.email); 
-            this.user.append('password', this.form.password); 
-            var uri = this.$apiUrl + '/user/' + this.updatedId; 
+            this.vehicle.append('merk', this.form.merk);
+            this.vehicle.append('type', this.form.type);
+            this.vehicle.append('licensePlate', this.form.licensePlate);
+            this.vehicle.append('created_at', this.form.created_at);
+            var uri = this.$apiUrl + '/vehicle/' + this.updatedId; 
             this.load = true 
-            this.$http.post(uri,this.user).then(response =>{
+            this.$http.post(uri,this.vehicle).then(response =>{
                 this.snackbar = true; //mengaktifkan snackbar 
                 this.color = 'green'; //memberi warna snackbar 
                 this.text = response.data.message; //memasukkan pesan ke snackbar 
@@ -171,14 +181,15 @@ export default {
         editHandler(item){ 
             this.typeInput = 'edit'; 
             this.dialog = true; 
-            this.form.name = item.name; 
-            this.form.email = item.email; 
-            this.form.password = '', 
+            this.form.merk = item.merk; 
+            this.form.type = item.type; 
+            this.form.licensePlate = item.licensePlate;
+            this.form.created_at = item.created_at, 
             this.updatedId = item.id 
         },
 
         deleteData(deleteId){ //mengahapus data 
-            var uri = this.$apiUrl + '/user/' + deleteId; //data dihapus berdasarkan id 
+            var uri = this.$apiUrl + '/vehicle/' + deleteId; //data dihapus berdasarkan id 
             
             this.$http.delete(uri).then(response =>{ 
                 this.snackbar = true; 
@@ -205,9 +216,10 @@ export default {
 
         resetForm(){ 
             this.form = { 
-                name : '', 
-                email : '', 
-                password : '' 
+                merk : '', 
+                type : '', 
+                licensePlate : '',
+                created_at : '' 
             } 
         }
 
